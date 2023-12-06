@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { hash } from 'bcrypt'
+import { hash } from 'bcrypt';
+import prisma from "../../providers/prismaProvider";
 
-const prisma: PrismaClient = new PrismaClient();
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
