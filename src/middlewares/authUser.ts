@@ -1,12 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
+import prisma from '../providers/prismaProvider';
 
 interface JwtPayload {
     id: string
 };
-
-const prisma: PrismaClient = new PrismaClient();
 
 export const authUser = async (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
@@ -27,5 +25,6 @@ export const authUser = async (req: Request, res: Response, next: NextFunction) 
             id: Number(id)
         }
     });
+    
     next();
 }

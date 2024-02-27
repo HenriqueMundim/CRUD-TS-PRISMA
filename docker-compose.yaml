@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    container_name: db_postgres 
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c pg_isready -U postgres -d ts_prisma"]
+      interval: 15s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    
+  apllication:
+    build: 
+      context: ./
+      dockerfile: dockerfile
+    container_name: apllication
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
